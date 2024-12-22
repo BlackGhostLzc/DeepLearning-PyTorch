@@ -118,9 +118,26 @@ def get_attn_pad_mask(seq_q, seq_k):
     return pad_attn_mask.expand(batch_size, len_q, len_k)
 
 
+'''
+# Decoder输入Mask
+用来Mask未来输入信息，返回的是一个上三角矩阵。比如我们在中英文翻译时候，会先把"我是学生"整个句子输入到Encoder中，得到最后一层的输出
+后，才会在Decoder输入"S I am a student"（s表示开始）,但是"S I am a student"这个句子我们不会一起输入，而是在T0时刻先输入"S"预测，
+预测第一个词"I"；在下一个T1时刻，同时输入"S"和"I"到Decoder预测下一个单词"am"；然后在T2时刻把"S,I,am"同时输入到Decoder预测下一个单
+词"a"，依次把整个句子输入到Decoder,预测出"I am a student E"。
+
+计算注意力得分时，模型只能关注生成内容的当前位置之前的信息，避免未来信息的泄漏。
+
+为 1 的地方表示会被 padding mask 或者 sequence mask。
+
+'''
 def get_attn_subsequence_mask(seq):
     '''
     :param seq: [batch_size, tgt_len]
     :return:
     '''
-    pass
+    # 生成上三角矩阵,[batch_size, tgt_len, tgt_len]
+    attn_shape = [seq.size(0), seq.size(1), seq.size(1)]
+    # 得到主对角线向上平移一个距离的对角线（下三角包括对角线全为0）
+    subsequence_mask = np.triu(np.ones(attn_shape), k=1)
+    subsequence_mask = torch.from_numpy(subsequence_mask).byte()
+    return subsequence_mask

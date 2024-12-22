@@ -19,7 +19,7 @@ mnist = torchvision.datasets.MNIST(root='data',
                                    train=True,
                                    transform=transform,
                                    download=True)
-# Data loader
+# Data loader.py
 data_loader = torch.utils.data.DataLoader(dataset=mnist,
                                           batch_size=batch_size,
                                           shuffle=True)

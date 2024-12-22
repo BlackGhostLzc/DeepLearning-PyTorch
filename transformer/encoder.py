@@ -10,10 +10,10 @@ bias=False表示这个线性层没有偏置项，这是Transformer模型中的�
 因为偏置项可能会影响多头自注意力的缩放等比例性质。
 '''
 
-from util.constants import (tgt_vocab_size,d_model,n_layers,sentences, \
+from transformer.util.constants import (tgt_vocab_size,d_model,n_layers,sentences, \
                             src_vocab,src_vocab_size,tgt_vocab,d_k,d_v,d_ff,n_heads)
 
-from util.attention import get_attn_pad_mask, MultiHeadAttention, \
+from transformer.util.attention import get_attn_pad_mask, MultiHeadAttention, \
     PositionalEncoding, PoswiseFeedForwardNet, make_data
 
 
